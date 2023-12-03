@@ -16,7 +16,7 @@ function GameTimer ({duration, handleTimeUp} : {duration: number, handleTimeUp: 
 
       setTimeout(() => {
         setprogressStart(true)
-      }, 5)
+      }, 50)
 
       return () => clearInterval(intervalRef.current)
     }, [])

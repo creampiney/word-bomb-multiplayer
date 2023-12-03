@@ -39,7 +39,7 @@ const WordDisplay = ({typingWord, constraint}:
 
     return (
         <div className="space-y-1">
-            <div className="py-12 space-x-1 flex justify-center">
+            <div className="pb-12 pt-4 space-x-1 flex justify-center">
             {
                 displayWord.toUpperCase( ).split('').map((letter, idx) => (
                     <LetterDisplay 
