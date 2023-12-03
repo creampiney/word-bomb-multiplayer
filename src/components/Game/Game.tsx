@@ -7,6 +7,7 @@ import Key from './Keyboard/Key';
 import Keyboard from './Keyboard/Keyboard';
 import WordDisplay from './Display/WordDisplay';
 import { getRandomConstaint, isWordInWordList } from '../../lib/wordManager';
+import GameTimer from '../../utils/GameTimer';
 
 const Game = ({sessionId}:{sessionId: string}) => {
 
@@ -160,6 +161,11 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
         await handleTyping("")
     }
+
+    // Handle Timeup
+    async function handleTimeUp() {
+        alert("Time up")
+    }
     
 
     // Subscribe Firebase
@@ -193,10 +199,24 @@ const Game = ({sessionId}:{sessionId: string}) => {
     return (
         <div className="w-screen h-screen flex items-center justify-center bg-slate-300 overflow-hidden">
             <div className="w-[95vw] h-[95vh] bg-slate-100 rounded-3xl flex flex-col">
-                <div>Player A:</div>
-                <div>{playerAName}</div>
-                <div>Player B:</div>
-                <div>{playerBName}</div>
+                <div className="w-full h-5 rounded-t-md overflow-hidden">
+                    {
+                        (isStart && myPlayer === currentTurn) &&
+                            <GameTimer duration={10} handleTimeUp={handleTimeUp} />
+
+                    }
+                    {
+                        (isStart && myPlayer !== currentTurn) &&
+                            <GameTimer duration={10} handleTimeUp={() => {}} />
+                    }
+                </div>
+                <div>
+                    <div>Player A: Life left {playerALife}</div>
+                    <div>{playerAName}</div>
+                    <div>Player B: Life left {playerBLife}</div>
+                    <div>{playerBName}</div>
+                </div>
+                
                 {
                     (isStart) &&
                     <WordDisplay typingWord={currentTypeWord || ""} constraint={currentConstraint} />
