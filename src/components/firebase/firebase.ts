@@ -81,4 +81,23 @@ async function writeCurrentTyping(roomId: string, word: string) {
   await set(ref(realtimeDb, 'currentTyping/' + roomId), word);
 }
 
-export { db, realtimeDb, createRoom, joinRoom, getRoomData, writeCurrentTyping }
+
+async function readPilot(uuid: string) {
+    const docRef = doc(db, "pilot", uuid)
+    const docSnap = await getDoc(docRef)
+
+    if (!docSnap.exists()) {
+      return false
+    }
+    return true
+}
+
+async function writePilot(uuid: string, isAccept: boolean) {
+  const docRef = await setDoc(doc(db, "pilot", uuid), {
+    isAccept: isAccept,
+    createdAt: Date.now()
+  });
+}
+
+
+export { db, realtimeDb, createRoom, joinRoom, getRoomData, writeCurrentTyping, readPilot, writePilot }

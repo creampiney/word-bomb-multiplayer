@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Rubik+Bubbles&display=swap');
+
 .App {
   text-align: center;
 }
@@ -30,6 +32,10 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.logo {
+  font-family: 'Rubik Bubbles'
 }
 
 @keyframes App-logo-spin {

@@ -13,7 +13,7 @@ function App() {
   const [sessionId, setSessionId] = useState<string>(uuidv4());
 
 
-  // For A/B Testing
+  // For A/B Testing && Pilot
   function handleGenerateUUID() {
     if (cookies.user) {
       return

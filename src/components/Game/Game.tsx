@@ -11,6 +11,11 @@ import GameTimer from '../../utils/GameTimer';
 import Avatar from '../etc/Avatar';
 import { FaHeart } from "react-icons/fa";
 import AvatarSkeleton from '../etc/AvatarSkeleton';
+import { IoIosBarcode } from 'react-icons/io';
+import { MdContentCopy } from "react-icons/md";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; 
+import copy from 'copy-to-clipboard';
 
 const Game = ({sessionId}:{sessionId: string}) => {
 
@@ -33,6 +38,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
     const [currentTypeWord, setCurrentTypeWord] = useState<string>("")
     const [currentConstraint, setCurrentConstraint] = useState<string>("")
     const [currentTurn, setCurrentTurn] = useState<string>("A")
+    const [wordValidStatus, setWordValidStatus] = useState<number>(0)
 
     const [usedWord, setUsedWord] = useState<string[]>([])
 
@@ -126,6 +132,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
     // Handle typing realtime
     async function handleTyping(value: string) {
+        
         if (currentTypeWord != value) {
             await writeCurrentTyping(roomId || "1", value.toUpperCase())
         }
@@ -140,20 +147,23 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
         // Check if meet constraint
         if (!currentTypeWord.includes(currentConstraint)) {
-            alert("So noob, constraint is " + currentConstraint)
+            setWordValidStatus(1)
+            // alert("So noob, constraint is " + currentConstraint)
             return
         }
 
         // Check if it is used
         if (usedWord.includes(currentTypeWord)) {
-            alert("It is used")
+            setWordValidStatus(2)
+            // alert("It is used")
             return
         }
 
         // Check if word is not valid
         const isValid = isWordInWordList(currentTypeWord || "")
         if (!isValid) {
-            alert("This word is not valid")
+            setWordValidStatus(3)
+            // alert("This word is not valid")
             return
         }
 
@@ -194,6 +204,15 @@ const Game = ({sessionId}:{sessionId: string}) => {
             });
         }
     }
+
+
+    // Handle Copying to clipboard
+    function handleRoomIdCopy() {
+        let isCopy = copy(roomId || "");
+        if (isCopy) {
+            toast("Copied to Clipboard");
+        }
+    }
     
 
     // Subscribe Firebase
@@ -222,6 +241,10 @@ const Game = ({sessionId}:{sessionId: string}) => {
         });
     }, [])
 
+    // Update word error
+    useEffect(() => {
+        setWordValidStatus(0)
+    }, [currentTypeWord])
 
 
     return (
@@ -286,7 +309,27 @@ const Game = ({sessionId}:{sessionId: string}) => {
                 {
                     (isStart) &&
                     <div className="w-full flex justify-center">
-                        <span className="font-medium">{(currentTurn === "A") ? playerAName : playerBName}, type an English word containing:</span>
+                        {
+                            (wordValidStatus === 0) && (
+                                <span className="font-medium">{(currentTurn === "A") ? playerAName : playerBName}, type an English word containing:</span>
+                            )
+                        }
+                        {
+                            (wordValidStatus === 1) && (
+                                <span className="font-medium text-red-700">This word does not contain {currentConstraint}</span>
+                            )
+                        }
+                        {
+                            (wordValidStatus === 2) && (
+                                <span className="font-medium text-red-700">This word is already used</span>
+                            )
+                        }
+                        {
+                            (wordValidStatus === 3) && (
+                                <span className="font-medium text-red-700">This word is not valid</span>
+                            )
+                        }
+                        
                     </div>
                 }
                 
@@ -315,7 +358,29 @@ const Game = ({sessionId}:{sessionId: string}) => {
                     )
                 }
                 </div>
-                {/* <button onClick={() => {alert(usedWord)}}>Show used word</button> */}
+                
+                
+                {
+                    (!isStart && !isDone && myPlayer === "A") && (
+                        <div className="flex flex-col items-center justify-center space-y-4 pb-4">
+                            <span className="font-bold text-center">Invite your friend by sending this code</span>
+                            <div className="relative w-[300px]">                        
+                                <input 
+                                    type="text" 
+                                    value={roomId}
+                                    placeholder=""
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pe-10 p-2.5 text-center"
+                                    disabled
+                                />
+                                <div className="absolute inset-y-0 end-0 flex items-center pe-3">
+                                    <button className="hover:bg-slate-100 z-10" onClick={handleRoomIdCopy}>
+                                        <MdContentCopy className="text-gray-900"/>
+                                    </button>
+                                </div>
+                             </div>
+                        </div>
+                    )
+                }
                 
                 <div className="flex flex-col items-center justify-center">
                 {   
@@ -349,6 +414,18 @@ const Game = ({sessionId}:{sessionId: string}) => {
                 </div>
                 
             </div>
+            <ToastContainer
+                position="bottom-center"
+                autoClose={500}
+                hideProgressBar
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </div>
     )
 }
