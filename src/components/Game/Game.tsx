@@ -321,19 +321,19 @@ const Game = ({sessionId}:{sessionId: string}) => {
             <div className="w-full flex flex-col flex-1">
                 
                 <div className="px-10 w-full h-[192px] sm:h-[96px] my-5 flex flex-col sm:flex-row justify-center">
-                    <div className="w-full sm:w-1/2 flex">
+                    <div className={`w-full sm:w-1/2 flex rounded-full ${(isStart && currentTurn === "A") && "bg-slate-200"}`}>
                         <div className="w-fit h-full flex flex-col justify-center">
                             <Avatar src={playerAAvatar} size={24} />
                         </div>
                         <div className="w-fit h-full flex flex-col justify-center pl-5 space-y-3">
-                            <div className="font-medium">{playerAName}</div>
+                            <div className="font-medium">{playerAName}{(myPlayer === "A") && <span className="font-bold"> (Me)</span>}</div>
                             <div className="font-medium flex space-x-1 text-lg">
                                 <FaHeart className={(playerALife >= 1 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />
                                 <FaHeart className={(playerALife >= 2 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />
                             </div>
                         </div>
                     </div>
-                    <div className="w-full sm:w-1/2 flex flex-row-reverse">
+                    <div className={`w-full sm:w-1/2 flex flex-row-reverse rounded-full ${(isStart && currentTurn === "B") && "bg-slate-200"}`}>
                         <div className="w-fit h-full flex flex-col justify-center">
                             {
                                 (playerBName) ?
@@ -347,7 +347,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                             {
                                 (playerBName) ?
                                 <>
-                                    <div className="font-medium text-right">{playerBName}</div>
+                                    <div className="font-medium text-right">{playerBName}{(myPlayer === "B") && <span className="font-bold"> (Me)</span>}</div>
                                     <div className="w-full font-medium flex space-x-1 text-lg justify-end">
                                         <FaHeart className={(playerBLife >= 2 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />
                                         <FaHeart className={(playerBLife >= 1 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />    
@@ -428,7 +428,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                                     type="text" 
                                     value={roomId}
                                     placeholder=""
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pe-10 p-2.5 text-center"
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-md font-medium rounded-lg block w-full pe-10 p-2.5 text-center"
                                     disabled
                                 />
                                 <div className="absolute inset-y-0 end-0 flex items-center pe-3">

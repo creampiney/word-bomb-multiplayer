@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { createRoom, joinRoom, readPilot, writePilot } from "../firebase/firebase"
 import { LuUser2 } from "react-icons/lu";
 import { IoIosBarcode } from "react-icons/io";
+import { CiTextAlignJustify } from "react-icons/ci";
 import Divider from "../etc/Divider";
 import CookieConsent from "./CookieConsent/CookieConsent";
 import { useCookies } from "react-cookie";
@@ -193,7 +194,7 @@ const Home = ({sessionId}:{sessionId: string}) => {
                             </div>
                             <div className="relative w-full">
                                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                    <IoIosBarcode className="text-gray-500"/>
+                                    <CiTextAlignJustify className="text-gray-500"/>
                                 </div>
                                 <input 
                                     type="text" 
