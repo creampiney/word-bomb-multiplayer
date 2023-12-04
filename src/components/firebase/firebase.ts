@@ -25,10 +25,18 @@ const db = getFirestore(app);
 
 const realtimeDb = getDatabase(app);
 
-
+const rndString = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
 
 async function createRoom(playerASession: string, playerAName: string, avatarCode: number) {
-  const docRef = await addDoc(collection(db, "rooms"), {
+  let roomId = ''
+  let counter = 0;
+  const charactersLength = rndString.length;
+  while (counter < 6) {
+      roomId += rndString.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+  }
+
+  const docRef = await setDoc(doc(db, "rooms", roomId), {
     playerCount: 1,
     playerASession: playerASession,
     playerAName: playerAName,
@@ -37,7 +45,7 @@ async function createRoom(playerASession: string, playerAName: string, avatarCod
     isDone: false,
     isPlayerBTurn: false
   });
-  return docRef.id
+  return roomId
 }
 
 async function joinRoom(roomId: string, sessionId: string, name: string, avatarCode: number) {

@@ -307,7 +307,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
 
     return (
-        <div className="w-screen h-screen flex flex-col items-center justify-center bg-slate-100 overflow-hidden">
+        <div className="w-screen min-h-screen flex flex-col items-center justify-center bg-slate-100 overflow-hidden">
             <div className="w-full h-5 overflow-hidden">
                 {
                     (isStart && myPlayer === currentTurn) &&
@@ -318,22 +318,22 @@ const Game = ({sessionId}:{sessionId: string}) => {
                         <GameTimer duration={10} handleTimeUp={() => {}} />
                 }
             </div>
-            <div className="w-full flex flex-col flex-1 px-10">
+            <div className="w-full flex flex-col flex-1">
                 
-                <div className="w-full h-48 py-5 flex justify-center">
-                    <div className="w-1/2 flex">
+                <div className="px-10 w-full h-[192px] sm:h-[96px] my-5 flex flex-col sm:flex-row justify-center">
+                    <div className="w-full sm:w-1/2 flex">
                         <div className="w-fit h-full flex flex-col justify-center">
                             <Avatar src={playerAAvatar} size={24} />
                         </div>
                         <div className="w-fit h-full flex flex-col justify-center pl-5 space-y-3">
                             <div className="font-medium">{playerAName}</div>
-                            <div className="font-medium flex space-x-3 text-lg">
+                            <div className="font-medium flex space-x-1 text-lg">
                                 <FaHeart className={(playerALife >= 1 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />
                                 <FaHeart className={(playerALife >= 2 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />
                             </div>
                         </div>
                     </div>
-                    <div className="w-1/2 flex flex-row-reverse">
+                    <div className="w-full sm:w-1/2 flex flex-row-reverse">
                         <div className="w-fit h-full flex flex-col justify-center">
                             {
                                 (playerBName) ?
@@ -348,9 +348,9 @@ const Game = ({sessionId}:{sessionId: string}) => {
                                 (playerBName) ?
                                 <>
                                     <div className="font-medium text-right">{playerBName}</div>
-                                    <div className="font-medium flex space-x-3 text-lg">
-                                        <FaHeart className={(playerBLife >= 1 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />
+                                    <div className="w-full font-medium flex space-x-1 text-lg justify-end">
                                         <FaHeart className={(playerBLife >= 2 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />
+                                        <FaHeart className={(playerBLife >= 1 || (!isDone && !isStart)) ? "text-red-500" : "text-gray-400"} />    
                                     </div>
                                 </> :
                                 <>
@@ -367,10 +367,10 @@ const Game = ({sessionId}:{sessionId: string}) => {
                 </div>
                 {
                     (isStart) &&
-                    <div className="w-full flex justify-center">
+                    <div className="px-10 w-full flex justify-center">
                         {
                             (wordValidStatus === 0) && (
-                                <span className="font-medium">{(currentTurn === "A") ? playerAName : playerBName}, type an English word containing:</span>
+                                <span className="font-medium text-center">{(currentTurn === "A") ? playerAName : playerBName}, type an English word containing:</span>
                             )
                         }
                         {
@@ -392,20 +392,20 @@ const Game = ({sessionId}:{sessionId: string}) => {
                     </div>
                 }
                 
-                <div>
+                <div className="px-10">
                 {
                     (isStart) &&
                     <WordDisplay typingWord={currentTypeWord || ""} constraint={currentConstraint} />
                 }
                 </div>
-                <div>
+                <div className="">
                 {
                     (isStart && myPlayer === currentTurn) &&
                     <Keyboard typingWord={currentTypeWord || ""} handleTyping={handleTyping} checkAnswer={checkAnswer} />
                 }
                 </div>
                 
-                <div>
+                <div className="px-10">
                 {
                     (isDone) && (
                         <div className="w-full">
@@ -421,7 +421,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                 
                 {
                     (!isStart && !isDone && myPlayer === "A") && (
-                        <div className="flex flex-col items-center justify-center space-y-4 pb-4">
+                        <div className="px-10 flex flex-col items-center justify-center space-y-4 pb-4">
                             <span className="font-bold text-center">Invite your friend by sending this code</span>
                             <div className="relative w-[300px]">                        
                                 <input 
@@ -441,7 +441,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                     )
                 }
                 
-                <div className="flex flex-col items-center justify-center">
+                <div className="px-10 flex flex-col items-center justify-center">
                 {   
                 (!isStart) && (
                     (myPlayer == "A") ?
@@ -471,6 +471,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                 )
                 }
                 </div>
+                
                 
             </div>
             <ToastContainer

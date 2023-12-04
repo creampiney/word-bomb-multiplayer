@@ -109,7 +109,7 @@ const Home = ({sessionId}:{sessionId: string}) => {
 
 
     return (
-        <div className="w-screen min-h-screen flex items-center justify-center">
+        <div className="w-screen min-h-screen flex items-center justify-center overflow-hidden">
             {
                 (showConsent) &&
                 <CookieConsent handleSubmit={handlePilotConsent} />
@@ -121,7 +121,7 @@ const Home = ({sessionId}:{sessionId: string}) => {
                     <div className="w-full h-full flex flex-row justify-center p-5">
                         <div className="w-96 flex flex-col justify-center space-y-2">
                             <span
-                                className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent text-center text-6xl logo"
+                                className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent text-center text-6xl logo"
                             >
                                 Word Bomb
                             </span>
@@ -145,7 +145,7 @@ const Home = ({sessionId}:{sessionId: string}) => {
                                 <input 
                                 type="text" 
                                 value={name} 
-                                onChange={(e) => {setName(e.target.value)}} 
+                                onChange={(e) => {setName(e.target.value.slice(0,15))}} 
                                 placeholder="Fill your player name..."
                                 className={`bg-gray-50 border ${(isNameError) ? "border-red-600" : "border-gray-300"} text-gray-900 text-sm rounded-lg block w-full ps-10 p-2.5`}
                                 />
@@ -198,7 +198,7 @@ const Home = ({sessionId}:{sessionId: string}) => {
                                 <input 
                                     type="text" 
                                     value={roomCode} 
-                                    onChange={(e) => {setRoomCode(e.target.value)}} 
+                                    onChange={(e) => {setRoomCode(e.target.value.slice(0,6).toUpperCase())}} 
                                     placeholder="Fill room code..."
                                     className={`bg-gray-50 border ${(isCodeError) ? "border-red-600" : "border-gray-300"} text-gray-900 text-sm rounded-lg block w-full ps-10 p-2.5`}
                                 />

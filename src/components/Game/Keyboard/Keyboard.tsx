@@ -27,11 +27,11 @@ const Keyboard = ({typingWord, handleTyping, checkAnswer} : {typingWord: string,
                 handleTyping("")
             }
         }
-        else if(key.length === 1 && key >= 'A' && key <= 'Z') {
+        else if(typingWord.length <= 31 && key.length === 1 && key >= 'A' && key <= 'Z') {
             playTyping()
             handleTyping(typingWord + key)
         }
-        else if(key.length === 4 && key.slice(0, 3) === "Key" && key.slice(-1) >= 'A' && key.slice(-1) <= 'Z') {
+        else if(typingWord.length <= 31 && key.length === 4 && key.slice(0, 3) === "Key" && key.slice(-1) >= 'A' && key.slice(-1) <= 'Z') {
             playTyping()
             handleTyping(typingWord + key.slice(-1))
         }
@@ -67,12 +67,22 @@ const Keyboard = ({typingWord, handleTyping, checkAnswer} : {typingWord: string,
                 }
             </div>
             <div className="space-x-2 flex justify-center">
-                <Key value="ENTER" key="ENTER" handleKeyType={handleKeyType} />
+                <div className="hidden sm:flex">
+                    <Key value="ENTER" key="ENTER" handleKeyType={handleKeyType} />
+                </div>
+                
                 {
                     row_3.map((key) => (
                         <Key value={key} key={key} handleKeyType={handleKeyType} />
                     ))
                 }
+                <div className="hidden sm:flex">
+                    <Key value="BACKSPACE" key="BACKSPACE" handleKeyType={handleKeyType} />
+                </div>
+                
+            </div>
+            <div className="flex sm:hidden space-x-2 justify-center">
+                <Key value="ENTER" key="ENTER" handleKeyType={handleKeyType} />
                 <Key value="BACKSPACE" key="BACKSPACE" handleKeyType={handleKeyType} />
             </div>
             
