@@ -14,6 +14,14 @@ import { MdContentCopy } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
 import copy from 'copy-to-clipboard';
+import useSound from 'use-sound';
+
+// Sound
+import wrongSfx from '../../sounds/wrong.mp3'
+import correctSfx from '../../sounds/correct.mp3'
+import explosionSfx from '../../sounds/explosion.mp3'
+import turnSfx from '../../sounds/turn.mp3'
+
 
 const Game = ({sessionId}:{sessionId: string}) => {
 
@@ -39,6 +47,13 @@ const Game = ({sessionId}:{sessionId: string}) => {
     const [wordValidStatus, setWordValidStatus] = useState<number>(0)
 
     const [usedWord, setUsedWord] = useState<string[]>([])
+
+
+    // Sound
+    const [playWrong] = useSound(wrongSfx)
+    const [playCorrect] = useSound(correctSfx)
+    const [playExplosion] = useSound(explosionSfx)
+    const [playTurn] = useSound(turnSfx)
 
 
     function checkSession(playerASession: string, playerBSession: string) {
@@ -125,6 +140,11 @@ const Game = ({sessionId}:{sessionId: string}) => {
         setPlayerBLife(data.playerBLife)
 
         setDone(data.isDone)
+
+        if(myPlayer != currentTurn) {
+            console.log("sound")
+            playTurn()
+        }
         
     }
 
@@ -146,14 +166,14 @@ const Game = ({sessionId}:{sessionId: string}) => {
         // Check if meet constraint
         if (!currentTypeWord.includes(currentConstraint)) {
             setWordValidStatus(1)
-            // alert("So noob, constraint is " + currentConstraint)
+            playWrong()
             return
         }
 
         // Check if it is used
         if (usedWord.includes(currentTypeWord)) {
             setWordValidStatus(2)
-            // alert("It is used")
+            playWrong()
             return
         }
 
@@ -161,7 +181,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
         const isValid = isWordInWordList(currentTypeWord || "")
         if (!isValid) {
             setWordValidStatus(3)
-            // alert("This word is not valid")
+            playWrong()
             return
         }
 
@@ -169,7 +189,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
         const nextTurn = (currentTurn === "A") ? "B" : "A"
 
         
-
+        // playCorrect()
         const updateDocRef = await updateDoc(doc(db, "rooms", roomId || ""), {
             currentTurn: nextTurn,
             currentConstraint: getRandomConstaint(),
@@ -181,6 +201,8 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
     // Handle Timeup
     async function handleTimeUp() {
+        playExplosion()
+
         const nextTurn = (currentTurn === "A") ? "B" : "A"
 
         if (currentTurn === "A") {
@@ -219,7 +241,6 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
         const unsubscribe = onSnapshot(doc(db, "rooms", roomId || ""), (doc) => {
             const data = doc.data();
-            console.log("Current data: ", data);
             updateGame(data)
 
         });
@@ -234,7 +255,6 @@ const Game = ({sessionId}:{sessionId: string}) => {
         const TypeRef = ref(realtimeDb, 'currentTyping/' + roomId);
         onValue(TypeRef, (snapshot) => {
           const data = snapshot.val();
-          console.log("Out : " + data)
           setCurrentTypeWord(data)
         });
     }, [])

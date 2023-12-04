@@ -44,13 +44,11 @@ async function joinRoom(roomId: string, sessionId: string, name: string) {
     const docSnap = await getDoc(docRef)
 
     if (!docSnap.exists()) {
-        console.log("Room not found")
         return "The room is not found"
     }
     
     const docData = docSnap.data()
     if(docData.playerCount != 1) {
-        console.log("Room is full")
         return "This room is full"
     }
 
@@ -77,7 +75,6 @@ async function getRoomData(roomId: string) {
 }
 
 async function writeCurrentTyping(roomId: string, word: string) {
-  console.log(word)
   await set(ref(realtimeDb, 'currentTyping/' + roomId), word);
 }
 
