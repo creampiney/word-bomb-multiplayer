@@ -34,6 +34,9 @@ const Game = ({sessionId}:{sessionId: string}) => {
     const [playerAName, setPlayerAName] = useState<string>("")
     const [playerBName, setPlayerBName] = useState<string>("")
 
+    const [playerAAvatar, setPlayerAAvatar] = useState<number>(0)
+    const [playerBAvatar, setPlayerBAvatar] = useState<number>(0)
+
     const [isFull, setFull] = useState<boolean>(false)
     const [isStart, setStart] = useState<boolean>(false)
     const [isDone, setDone] = useState<boolean>(false)
@@ -45,6 +48,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
     const [currentConstraint, setCurrentConstraint] = useState<string>("")
     const [currentTurn, setCurrentTurn] = useState<string>("A")
     const [wordValidStatus, setWordValidStatus] = useState<number>(0)
+    const [previousWord, setPreviousWord] = useState<string>("")
 
     const [usedWord, setUsedWord] = useState<string[]>([])
 
@@ -77,6 +81,12 @@ const Game = ({sessionId}:{sessionId: string}) => {
         if(roomData.playerBName) {
             setPlayerBName(roomData.playerBName)
         }
+        if(roomData.playerAAvatar) {
+            setPlayerAAvatar(roomData.playerAAvatar)
+        }
+        if(roomData.playerBAvatar) {
+            setPlayerBAvatar(roomData.playerBAvatar)
+        }
         if(roomData.isFull) {
             setFull(roomData.isFull)
         }
@@ -86,6 +96,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
     // Start Game
     async function startGame() {
+        setCurrentTurn("A")
         setPlayerALife(2)
         setPlayerBLife(2)
 
@@ -96,12 +107,13 @@ const Game = ({sessionId}:{sessionId: string}) => {
             playerALife : 2,
             playerBLife : 2,
             currentTurn: "A",
-            currentConstraint: getRandomConstaint()
+            currentConstraint: getRandomConstaint(),
+            previousWord: ""
         });
     }
 
     // Update Room Data
-    async function updateGame(data : DocumentData | undefined) {
+    function updateGame(data : DocumentData | undefined) {
         if(!data){
             return
         }
@@ -112,9 +124,25 @@ const Game = ({sessionId}:{sessionId: string}) => {
         if(data.playerBName && data.playerBName != playerBName) {
             setPlayerBName(data.playerBName)
         }
+        if(data.playerAAvatar) {
+            setPlayerAAvatar(data.playerAAvatar)
+        }
+        if(data.playerBAvatar) {
+            setPlayerBAvatar(data.playerBAvatar)
+        }
         if(data.isFull && data.isFull != isFull) {
             setFull(data.isFull)
+        }  
+
+        
+        if(data.previousWord && !usedWord.includes(data.previousWord)) {
+            setPreviousWord(data.previousWord)
+            // const newUsedWord = usedWord
+            // newUsedWord.push(data.previousWord)
+            // setUsedWord(newUsedWord)
+            // setUsedWord((usedWord) => [...usedWord, data.previousWord])
         }
+
         setStart(data.isStart)
 
         if(data.isStart) {
@@ -129,11 +157,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
             setCurrentConstraint(data.currentConstraint)
         }
 
-        if(data.previousWord && !usedWord.includes(data.previousWord)) {
-            const newUsedWord = usedWord
-            newUsedWord.push(data.previousWord)
-            setUsedWord(newUsedWord)
-        }
+        
 
         setPlayerALife(data.playerALife)
   
@@ -141,8 +165,8 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
         setDone(data.isDone)
 
-        if(myPlayer != currentTurn) {
-            console.log("sound")
+        if(myPlayer === data.currentTurn) {
+            console.log("play")
             playTurn()
         }
         
@@ -189,7 +213,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
         const nextTurn = (currentTurn === "A") ? "B" : "A"
 
         
-        // playCorrect()
+        playCorrect()
         const updateDocRef = await updateDoc(doc(db, "rooms", roomId || ""), {
             currentTurn: nextTurn,
             currentConstraint: getRandomConstaint(),
@@ -264,6 +288,23 @@ const Game = ({sessionId}:{sessionId: string}) => {
         setWordValidStatus(0)
     }, [currentTypeWord])
 
+    // Clear used word
+    useEffect(() => {
+        if (isDone) {
+            console.log("clear array")
+            setUsedWord([])
+        }
+    }, [isDone])
+
+    // Add used word
+    useEffect(() => {
+        if (!usedWord.includes(previousWord)) {
+            setUsedWord((usedWord) => [...usedWord, previousWord])
+        }
+    }, [previousWord])
+
+    
+
 
     return (
         <div className="w-screen h-screen flex flex-col items-center justify-center bg-slate-100 overflow-hidden">
@@ -282,7 +323,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                 <div className="w-full h-48 py-5 flex justify-center">
                     <div className="w-1/2 flex">
                         <div className="w-fit h-full flex flex-col justify-center">
-                            <Avatar src="https://utfs.io/f/4a65c7f9-7bb1-4498-99bb-4148be482108-t9vzc5.png" size={24} />
+                            <Avatar src={playerAAvatar} size={24} />
                         </div>
                         <div className="w-fit h-full flex flex-col justify-center pl-5 space-y-3">
                             <div className="font-medium">{playerAName}</div>
@@ -296,7 +337,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                         <div className="w-fit h-full flex flex-col justify-center">
                             {
                                 (playerBName) ?
-                                    <Avatar src="https://utfs.io/f/4a65c7f9-7bb1-4498-99bb-4148be482108-t9vzc5.png" size={24} />
+                                    <Avatar src={playerBAvatar} size={24} />
                                 :
                                     <AvatarSkeleton size={24} />
                             }

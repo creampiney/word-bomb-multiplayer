@@ -6,7 +6,7 @@ import Avatar4 from '../../images/avatar4.png'
 import Avatar5 from '../../images/avatar5.png'
 import Avatar6 from '../../images/avatar6.png'
 
-const Avatar = ({src, size}: {src: number, size: number}) => {
+const SelectableAvatar = ({src, size, onClick, isSelected}: {src: number, size: number, onClick: (idx: number) => void, isSelected: boolean}) => {
 
   const ImageMapper = [
     Avatar1,
@@ -18,7 +18,7 @@ const Avatar = ({src, size}: {src: number, size: number}) => {
   ]
 
   return (
-    <img src={ImageMapper[src-1]} className={`w-${size} h-${size} rounded-full`} />
+    <img src={ImageMapper[src-1]} className={`w-${size} h-${size} hover:border-2 hover:border-gray-700 rounded-full ${(isSelected) && "ring-2 ring-indigo-300"}`} onClick={() => {onClick(src)}} />
     // <div className={`w-${size} h-${size} rounded-full`}>
         
     // </div>
@@ -26,4 +26,4 @@ const Avatar = ({src, size}: {src: number, size: number}) => {
   )
 }
 
-export default Avatar
+export default SelectableAvatar

@@ -7,6 +7,8 @@ import Divider from "../etc/Divider";
 import CookieConsent from "./CookieConsent/CookieConsent";
 import { useCookies } from "react-cookie";
 import { ToastContainer, toast } from "react-toastify";
+import Avatar from "../etc/Avatar";
+import SelectableAvatar from "../etc/SelectableAvatar";
 
 
 const Home = ({sessionId}:{sessionId: string}) => {
@@ -23,6 +25,8 @@ const Home = ({sessionId}:{sessionId: string}) => {
     const [isNameError, setNameError] = useState<boolean>(false)
     const [isCodeError, setCodeError] = useState<boolean>(false)
 
+    const [selectedAvatar, setSelectedAvatar] = useState<number>(1)
+
     async function handleCreateRoom() {
         setCodeError(false)
         if (!name) {
@@ -30,7 +34,7 @@ const Home = ({sessionId}:{sessionId: string}) => {
             return
         }
 
-        const roomCode = await createRoom(sessionId, name)
+        const roomCode = await createRoom(sessionId, name, selectedAvatar)
         navigate(`/${roomCode}`)
         
     }
@@ -58,7 +62,7 @@ const Home = ({sessionId}:{sessionId: string}) => {
             return
         }
 
-        const status = await joinRoom(roomCode, sessionId, name)
+        const status = await joinRoom(roomCode, sessionId, name, selectedAvatar)
         if (status == "Room found") {
             navigate(`/${roomCode}`)
         }
@@ -79,9 +83,11 @@ const Home = ({sessionId}:{sessionId: string}) => {
 
     async function initCookieConsent() {
         if (!cookies.user) {
+            setShowConsent(true)
             return
         }
         const needConsent = await readPilot(cookies.user)
+        console.log(needConsent)
         setShowConsent(!needConsent)
     }
 
@@ -93,13 +99,17 @@ const Home = ({sessionId}:{sessionId: string}) => {
         setShowConsent(false)
     }
 
+    async function handleChangeAvatar(idx: number) {
+        setSelectedAvatar(idx)
+    }
+
     useEffect(() => {
         initCookieConsent()
     }, [])
 
 
     return (
-        <div className="w-screen h-screen flex items-center justify-center overflow-hidden">
+        <div className="w-screen min-h-screen flex items-center justify-center">
             {
                 (showConsent) &&
                 <CookieConsent handleSubmit={handlePilotConsent} />
@@ -139,6 +149,24 @@ const Home = ({sessionId}:{sessionId: string}) => {
                                 placeholder="Fill your player name..."
                                 className={`bg-gray-50 border ${(isNameError) ? "border-red-600" : "border-gray-300"} text-gray-900 text-sm rounded-lg block w-full ps-10 p-2.5`}
                                 />
+                            </div>
+
+                            <div className="w-full flex justify-between">
+                                <div>
+                                    <span className="font-medium">Select Avatar</span>
+                                </div>
+                            </div>
+
+                            <div className="w-full grid grid-cols-3 justify-center">
+                                {
+                                    [1,2,3,4,5,6].map((val) => (
+                                        <div className="flex justify-center py-2">
+                                            <SelectableAvatar src={val} key={val} size={14} onClick={handleChangeAvatar} isSelected={selectedAvatar === val}/>
+                                        </div>
+                                        
+                                    ))
+                                }
+                                
                             </div>
                             
 

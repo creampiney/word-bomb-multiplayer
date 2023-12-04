@@ -27,11 +27,12 @@ const realtimeDb = getDatabase(app);
 
 
 
-async function createRoom(playerASession: string, playerAName: string) {
+async function createRoom(playerASession: string, playerAName: string, avatarCode: number) {
   const docRef = await addDoc(collection(db, "rooms"), {
     playerCount: 1,
     playerASession: playerASession,
     playerAName: playerAName,
+    playerAAvatar: avatarCode,
     isStart: false,
     isDone: false,
     isPlayerBTurn: false
@@ -39,7 +40,7 @@ async function createRoom(playerASession: string, playerAName: string) {
   return docRef.id
 }
 
-async function joinRoom(roomId: string, sessionId: string, name: string) {
+async function joinRoom(roomId: string, sessionId: string, name: string, avatarCode: number) {
     const docRef = doc(db, "rooms", roomId)
     const docSnap = await getDoc(docRef)
 
@@ -55,6 +56,7 @@ async function joinRoom(roomId: string, sessionId: string, name: string) {
     const updateDocRef = await updateDoc(doc(db, "rooms", roomId), {
         playerCount: 2,
         playerBSession: sessionId,
+        playerBAvatar: avatarCode,
         playerBName: name,
         isFull: true
       });

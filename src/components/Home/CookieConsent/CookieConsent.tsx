@@ -21,8 +21,14 @@ const CookieConsent = ({handleSubmit}: {handleSubmit: (isAccept: boolean) => voi
                     {"We use necessary cookies to make our site work. We would like to set additional cookies to understand site usage, make site improvements and to remember your settings. We also use cookies set by other sites to help deliver content from their services."} 
                 </div>
                 <div className="flex justify-center space-x-3">
-                    <button 
+                    {/* <button 
                         className="text-gray-900 hover:bg-slate-100 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 w-36 border-2 border-slate-400" 
+                        onClick={() => {handleSubmit(false)}}
+                    >
+                        Decline cookies
+                    </button> */}
+                    <button 
+                        className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 w-36" 
                         onClick={() => {handleSubmit(false)}}
                     >
                         Decline cookies
