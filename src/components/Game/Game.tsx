@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { db, getRoomData, realtimeDb, writeCurrentTyping } from '../firebase/firebase';
 import { DocumentData, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { onValue, ref } from 'firebase/database';
-import Key from './Keyboard/Key';
 import Keyboard from './Keyboard/Keyboard';
 import WordDisplay from './Display/WordDisplay';
 import { getRandomConstaint, isWordInWordList } from '../../lib/wordManager';
@@ -11,7 +10,6 @@ import GameTimer from '../../utils/GameTimer';
 import Avatar from '../etc/Avatar';
 import { FaHeart } from "react-icons/fa";
 import AvatarSkeleton from '../etc/AvatarSkeleton';
-import { IoIosBarcode } from 'react-icons/io';
 import { MdContentCopy } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
@@ -415,7 +413,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
                 
             </div>
             <ToastContainer
-                position="bottom-center"
+                position="top-center"
                 autoClose={500}
                 hideProgressBar
                 newestOnTop={false}

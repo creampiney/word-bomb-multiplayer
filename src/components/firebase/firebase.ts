@@ -45,13 +45,13 @@ async function joinRoom(roomId: string, sessionId: string, name: string) {
 
     if (!docSnap.exists()) {
         console.log("Room not found")
-        return "Room not found"
+        return "The room is not found"
     }
     
     const docData = docSnap.data()
     if(docData.playerCount != 1) {
         console.log("Room is full")
-        return "Room is full"
+        return "This room is full"
     }
 
     const updateDocRef = await updateDoc(doc(db, "rooms", roomId), {

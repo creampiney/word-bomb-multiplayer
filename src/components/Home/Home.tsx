@@ -6,6 +6,7 @@ import { IoIosBarcode } from "react-icons/io";
 import Divider from "../etc/Divider";
 import CookieConsent from "./CookieConsent/CookieConsent";
 import { useCookies } from "react-cookie";
+import { ToastContainer, toast } from "react-toastify";
 
 
 const Home = ({sessionId}:{sessionId: string}) => {
@@ -19,9 +20,13 @@ const Home = ({sessionId}:{sessionId: string}) => {
     const [name, setName] = useState("")
     const [roomCode, setRoomCode] = useState("")
 
+    const [isNameError, setNameError] = useState<boolean>(false)
+    const [isCodeError, setCodeError] = useState<boolean>(false)
+
     async function handleCreateRoom() {
+        setCodeError(false)
         if (!name) {
-            alert("Yo, fill your name!")
+            setNameError(true)
             return
         }
 
@@ -31,12 +36,25 @@ const Home = ({sessionId}:{sessionId: string}) => {
     }
 
     async function handleJoinRoom() {
+        let isReject = false
+
         if (!name) {
-            alert("Yo, fill your name!")
-            return
+            isReject = true
+            setNameError(true)
         }
+        else {
+            setNameError(false)
+        }
+
         if (!roomCode) {
-            alert("Fill code!")
+            isReject = true
+            setCodeError(true)
+        }
+        else {
+            setCodeError(false)
+        }
+
+        if (isReject) {
             return
         }
 
@@ -45,7 +63,16 @@ const Home = ({sessionId}:{sessionId: string}) => {
             navigate(`/${roomCode}`)
         }
         else {
-            alert(status)
+            toast('🦄 ' + status, {
+                position: "top-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+                });
         }
         
     }
@@ -78,9 +105,6 @@ const Home = ({sessionId}:{sessionId: string}) => {
                 <CookieConsent handleSubmit={handlePilotConsent} />
             }
             <div className="w-screen h-screen bg-slate-100 flex flex-col overflow-hidden">
-                {/* <div className="h-[40px] flex justify-center p-5">
-                    <div>Word Bomb</div>
-                </div> */}
                 
                 <div className="w-full flex-1 flex justify-center">
                     
@@ -91,7 +115,19 @@ const Home = ({sessionId}:{sessionId: string}) => {
                             >
                                 Word Bomb
                             </span>
-                            <span className="font-medium">Player Name</span>
+                            <div className="w-full flex justify-between">
+                                <div>
+                                    <span className="font-medium">Player Name</span>
+                                </div>
+                                {
+                                    (isNameError) &&
+                                    <div>
+                                        <span className="text-red-600">Please fill your name</span>
+                                    </div>
+                                }
+                                
+                            </div>
+                            
                             <div className="relative w-full">
                                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                     <LuUser2 className="text-gray-500"/>
@@ -101,9 +137,10 @@ const Home = ({sessionId}:{sessionId: string}) => {
                                 value={name} 
                                 onChange={(e) => {setName(e.target.value)}} 
                                 placeholder="Fill your player name..."
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full ps-10 p-2.5"
+                                className={`bg-gray-50 border ${(isNameError) ? "border-red-600" : "border-gray-300"} text-gray-900 text-sm rounded-lg block w-full ps-10 p-2.5`}
                                 />
                             </div>
+                            
 
                             <button 
                                 className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mb-2" 
@@ -114,7 +151,18 @@ const Home = ({sessionId}:{sessionId: string}) => {
                             
                             <Divider />
                             
-                            <span className="font-medium">Or join the room</span>
+                            <div className="w-full flex justify-between">
+                                <div>
+                                    <span className="font-medium">Or join the room</span>
+                                </div>
+                                {
+                                    (isCodeError) &&
+                                    <div>
+                                        <span className="text-red-600">Please fill room code</span>
+                                    </div>
+                                }
+                                
+                            </div>
                             <div className="relative w-full">
                                 <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                                     <IoIosBarcode className="text-gray-500"/>
@@ -124,9 +172,10 @@ const Home = ({sessionId}:{sessionId: string}) => {
                                     value={roomCode} 
                                     onChange={(e) => {setRoomCode(e.target.value)}} 
                                     placeholder="Fill room code..."
-                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full ps-10 p-2.5"
+                                    className={`bg-gray-50 border ${(isCodeError) ? "border-red-600" : "border-gray-300"} text-gray-900 text-sm rounded-lg block w-full ps-10 p-2.5`}
                                 />
                             </div>
+                            
                             
                             <button 
                                 onClick={handleJoinRoom}
@@ -144,6 +193,18 @@ const Home = ({sessionId}:{sessionId: string}) => {
                 </div>
                 
             </div>
+            <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            />
         </div>
     )
 }
