@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getDoc, getFirestore, updateDoc } from "firebase/firestore";
+import { getDoc, getFirestore, updateDoc, increment } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { addDoc, collection, doc, setDoc } from "firebase/firestore";
@@ -99,6 +99,60 @@ async function readPilot(uuid: string) {
     return true
 }
 
+async function readABTesting(uuid: string) {
+    const docRef = doc(db, "pilot", uuid)
+    const docSnap = await getDoc(docRef)
+    if (!docSnap.exists()) {
+      // No data, generate it
+      const counterRef = doc(db, "counter", "abtesting")
+      const counterSnap = await getDoc(counterRef)
+
+      if (!counterSnap.exists()) {
+        return "Y"
+      }
+
+      const counterData = counterSnap.data()
+
+      let currentGroup = "A"
+
+      if (counterData.A > counterData.B) {
+        currentGroup = "B"
+      }
+
+      const genRef = await setDoc(doc(db, "pilot", uuid), {
+        group: currentGroup,
+        isSentConsent: false,
+        isAccept: false,
+        createdAt: Date.now()
+      });
+
+      if (currentGroup === "A") {
+        const updateCounter = await updateDoc(doc(db, "counter", "abtesting"), {
+          A: increment(1)
+        });
+      }
+      else if (currentGroup === "B") {
+        const updateCounter = await updateDoc(doc(db, "counter", "abtesting"), {
+          B: increment(1)
+        });
+      }
+
+      return currentGroup
+    }
+
+    // Have data, check if consent is sented
+    const docData = docSnap.data()
+
+    if (!docData.isSentConsent) {
+      return docData.group
+    }
+
+    // Have data and consent is sent, pass it
+    return "Y"
+
+
+}
+
 async function writePilot(uuid: string, isAccept: boolean) {
   const docRef = await setDoc(doc(db, "pilot", uuid), {
     isAccept: isAccept,
@@ -107,4 +161,13 @@ async function writePilot(uuid: string, isAccept: boolean) {
 }
 
 
-export { db, realtimeDb, createRoom, joinRoom, getRoomData, writeCurrentTyping, readPilot, writePilot }
+async function writeABTesting(uuid: string, isAccept: boolean) {
+  const docRef = await updateDoc(doc(db, "pilot", uuid), {
+    isSentConsent: true,
+    isAccept: isAccept,
+    sentAt: Date.now()
+  });
+}
+
+
+export { db, realtimeDb, createRoom, joinRoom, getRoomData, writeCurrentTyping, readPilot, writePilot, readABTesting, writeABTesting }

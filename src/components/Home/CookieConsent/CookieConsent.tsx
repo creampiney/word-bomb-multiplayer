@@ -1,6 +1,6 @@
 import React from 'react'
 
-const CookieConsent = ({handleSubmit}: {handleSubmit: (isAccept: boolean) => void}) => {
+const CookieConsent = ({handleSubmit, group}: {handleSubmit: (isAccept: boolean) => void, group: string}) => {
   return (
     <>
         <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-30 outline-none focus:outline-none bg-white opacity-80"></div>
@@ -28,13 +28,13 @@ const CookieConsent = ({handleSubmit}: {handleSubmit: (isAccept: boolean) => voi
                         Decline cookies
                     </button> */}
                     <button 
-                        className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 w-36" 
+                        className={`${(group === "B") ? "text-gray-900 border border-gray-200 hover:bg-gray-100 hover:text-blue-700" : "text-white bg-indigo-700 hover:bg-indigo-800"} focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 w-36`} 
                         onClick={() => {handleSubmit(false)}}
                     >
                         Decline cookies
                     </button>
                     <button 
-                        className="text-white bg-indigo-700 hover:bg-indigo-800 focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 w-36" 
+                        className={`text-white ${(group === "B") ? "bg-green-700 hover:bg-green-800" : "bg-indigo-700 hover:bg-indigo-800"} focus:ring-4 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 w-36`} 
                         onClick={() => {handleSubmit(true)}}
                     >
                         Accept cookies

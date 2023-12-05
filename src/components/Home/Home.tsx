@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { Dispatch, SetStateAction, useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import { createRoom, joinRoom, readPilot, writePilot } from "../firebase/firebase"
 import { LuUser2 } from "react-icons/lu";
@@ -12,13 +12,15 @@ import Avatar from "../etc/Avatar";
 import SelectableAvatar from "../etc/SelectableAvatar";
 
 
-const Home = ({sessionId}:{sessionId: string}) => {
+const Home = ({sessionId, consent, handleConsent, group}:{sessionId: string, consent: boolean, handleConsent: (isAcceot: boolean) => void, group: string}) => {
+
+
 
     const navigate = useNavigate()
 
-    const [cookies, setCookie] = useCookies(["user"]);
+    // const [cookies, setCookie] = useCookies(["user"]);
 
-    const [showConsent, setShowConsent] = useState<boolean>(false)
+    const [showConsent, setShowConsent] = useState<boolean>(consent)
 
     const [name, setName] = useState("")
     const [roomCode, setRoomCode] = useState("")
@@ -82,38 +84,44 @@ const Home = ({sessionId}:{sessionId: string}) => {
         
     }
 
-    async function initCookieConsent() {
-        if (!cookies.user) {
-            setShowConsent(true)
-            return
-        }
-        const needConsent = await readPilot(cookies.user)
-        console.log(needConsent)
-        setShowConsent(!needConsent)
-    }
+    
 
-    async function handlePilotConsent(isAccept: boolean) {
-        if (!cookies.user) {
-            return
-        }
-        await writePilot(cookies.user, isAccept)
-        setShowConsent(false)
-    }
+    // async function initCookieConsent() {
+    //     if (!cookies.user) {
+    //         setShowConsent(true)
+    //         return
+    //     }
+    //     const needConsent = await readPilot(cookies.user)
+    //     console.log(needConsent)
+    //     setShowConsent(!needConsent)
+    // }
+
+    // async function handlePilotConsent(isAccept: boolean) {
+    //     if (!cookies.user) {
+    //         return
+    //     }
+    //     await writePilot(cookies.user, isAccept)
+    //     setShowConsent(false)
+    // }
 
     async function handleChangeAvatar(idx: number) {
         setSelectedAvatar(idx)
     }
 
+    // useEffect(() => {
+    //     initCookieConsent()
+    // }, [])
+
     useEffect(() => {
-        initCookieConsent()
-    }, [])
+        setShowConsent(consent)
+    }, [consent])
 
 
     return (
         <div className="w-screen min-h-screen flex items-center justify-center overflow-hidden">
             {
-                (showConsent) &&
-                <CookieConsent handleSubmit={handlePilotConsent} />
+                (consent) &&
+                <CookieConsent handleSubmit={handleConsent} group={group} />
             }
             <div className="w-screen h-screen bg-slate-100 flex flex-col overflow-hidden">
                 

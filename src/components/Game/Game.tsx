@@ -21,6 +21,7 @@ import wrongSfx from '../../sounds/wrong.mp3'
 import correctSfx from '../../sounds/correct.mp3'
 import explosionSfx from '../../sounds/explosion.mp3'
 import turnSfx from '../../sounds/turn.mp3'
+import TutorialBox from './Tutorial/TutorialBox';
 
 
 const Game = ({sessionId}:{sessionId: string}) => {
@@ -307,7 +308,7 @@ const Game = ({sessionId}:{sessionId: string}) => {
 
 
     return (
-        <div className="w-screen min-h-screen flex flex-col items-center justify-center bg-slate-100 overflow-hidden">
+        <div className="w-screen min-h-screen flex flex-col items-center justify-center bg-slate-100 overflow-x-hidden ">
             <div className="w-full h-5 overflow-hidden">
                 {
                     (isStart && myPlayer === currentTurn) &&
@@ -470,6 +471,10 @@ const Game = ({sessionId}:{sessionId: string}) => {
                         </button>
                 )
                 }
+                </div>
+
+                <div className="px-0 sm:px-10 flex flex-col items-center justify-center mb-5 mt-5">
+                    <TutorialBox />
                 </div>
                 
                 
