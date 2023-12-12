@@ -1,46 +1,25 @@
-# Getting Started with Create React App
+# Word Bomb : 2-Player English Vocabulary Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+"Word Bomb" is the game related to English vocabulary, required 2 players to battle each other. 
 
-## Available Scripts
+The game's website is here: [wordbomb.netlify.app](wordbomb.netlify.app)
 
-In the project directory, you can run:
+![Game Lobby](/mdasset/lobby.png)
 
-### `npm start`
+## How to Play
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Player must type English word that contain specified letters and must be adjacent. For example, if the specified letters are "**EN**", the words that are valid are **EN**GLISH, P**EN**CIL, KITCH**EN**S, HOMOG**EN**EOUS, etc.
+- Player can type with his/her keyboard or in-app keyboard.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+https://github.com/creampiney/word-bomb-multiplayer/raw/main/src/videos/tutorial-1.mp4
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Player must answer within 10 seconds or player will lose his/her life.
+- Each player has 2 lifes in each game. Losing all 2 lifes will result in game over.
 
-### `npm run build`
+https://github.com/creampiney/word-bomb-multiplayer/raw/main/src/videos/tutorial-2.mp4
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Stack Used
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Frontend : React, Tailwind CSS
+- Storage : Firebase (Firestore, Realtime Database)
