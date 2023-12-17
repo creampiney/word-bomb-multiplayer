@@ -2,7 +2,7 @@
 
 "Word Bomb" is the game related to English vocabulary, required 2 players to battle each other. 
 
-The game's website is here: [wordbomb.netlify.app](wordbomb.netlify.app)
+The game's website is here: [wordbomb.netlify.app](https://wordbomb.netlify.app/)
 
 ![Game Lobby](/mdasset/lobby.png)
 
